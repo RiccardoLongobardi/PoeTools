@@ -1,0 +1,40 @@
+{
+  "lines": [
+    {
+      "currencyTypeName": "Sacrifice at Dusk",
+      "pay": { "value": 0.5, "listing_count": 30 },
+      "receive": { "value": 2.0, "listing_count": 35 },
+      "chaosEquivalent": 1.2,
+      "paySparkLine": null,
+      "receiveSparkLine": null,
+      "lowConfidencePaySparkLine": null,
+      "lowConfidenceReceiveSparkLine": null,
+      "detailsId": "sacrifice-at-dusk"
+    },
+    {
+      "currencyTypeName": "Divine Vessel",
+      "pay": { "value": 2.0, "listing_count": 22 },
+      "receive": { "value": 3.5, "listing_count": 28 },
+      "chaosEquivalent": 2.8,
+      "paySparkLine": null,
+      "receiveSparkLine": null,
+      "lowConfidencePaySparkLine": null,
+      "lowConfidenceReceiveSparkLine": null,
+      "detailsId": "divine-vessel"
+    }
+  ],
+  "currencyDetails": [
+    {
+      "id": 200,
+      "name": "Sacrifice at Dusk",
+      "tradeId": "sacrifice-at-dusk",
+      "icon": "https://web.poecdn.com/image/Art/sacdusk.png"
+    },
+    {
+      "id": 201,
+      "name": "Divine Vessel",
+      "tradeId": "divine-vessel",
+      "icon": "https://web.poecdn.com/image/Art/divessel.png"
+    }
+  ]
+}
