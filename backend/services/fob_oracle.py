@@ -122,17 +122,14 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
         ninja = PoeNinjaSource(league=league)
         all_builds = await ninja.fetch_builds(bq)
         log.info("poe.ninja: %d builds fetched", len(all_builds))
-    except Exception as exc:
-        warning = f"poe.ninja non disponibile ({exc}); uso build di esempio."
-        log.warning(warning)
-
-    # 4. Fallback: build di esempio se poe.ninja non risponde
-    if not all_builds:
-        all_builds = _fallback_builds(bq)
-
-    # 5. Scoring e ranking
-    candidates = [
-        BuildCandidate(build=b, score=_tag_match_score(b, bq))
+      # 3. poe.ninja fetch (fallback automatico se errore)
+    all_builds: list[Build] = []
+    warning: str | None = None
+    # NOTA: PoeNinjaSource attuale gestisce currency, non builds
+    # Per ora skippiamo e usiamo solo fallback catalog
+    warning = "poe.ninja builds API non ancora implementato; uso catalogo fallback."
+    all_builds = _fallback_builds(bq)
+      BuildCandidate(build=b, score=_tag_match_score(b, bq))
         for b in all_builds
     ]
     candidates.sort(key=lambda c: c.score, reverse=True)
