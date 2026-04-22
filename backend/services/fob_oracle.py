@@ -143,14 +143,29 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
     candidates.sort(key=lambda c: c.score, reverse=True)
     top = candidates[:5]
 
-    # 6. Piano progressione sulla build migliore
-    plan = None
-    if top:
-        try:
-            plan = await plan_build(top[0].build)
-        except Exception as exc:
-            log.warning("plan_build error: %s", exc)
-
+# Step 6: Plan progression + pricing sul top build
+plan = None
+if candidates:
+    try:
+        top_build = candidates[0].build
+        
+        # Integra pricing nel build
+        from backend.services.pricing.trade_pricing import TradePricer, COMMON_UNIQUES
+        pricer = TradePricer(league=league)
+        
+        # Detect archetype and estimate cost
+        archetype = "cold_spell" if "cold" in top_build.element else "generic"
+        uniques = COMMON_UNIQUES.get(archetype, [])[:3]
+        
+        if uniques:
+            cost_data = await pricer.estimate_build_cost(uniques)
+            top_build.est_cost_div = cost_data.get("total_divine")
+        
+        # Generate progression plan with pricing
+        plan = await plan_build(top_build)
+        
+    except Exception as exc:
+        logger.warning(f"Plan generation failed: {exc}")
     # 7. Serializza in dict compatibile con OracleResponse
     intent_dict = {
         "damage_type": tags.damage_type,
