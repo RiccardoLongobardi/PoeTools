@@ -117,11 +117,6 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
     # 3. Prova a caricare build da poe.ninja (fallback: lista vuota)
     all_builds: list[Build] = []
     warning: str | None = None
-    try:
-        from backend.datasource.poe_ninja import PoeNinjaSource
-        ninja = PoeNinjaSource(league=league)
-        all_builds = await ninja.fetch_builds(bq)
-        log.info("poe.ninja: %d builds fetched", len(all_builds))
       # 3. poe.ninja fetch (fallback automatico se errore)
     all_builds: list[Build] = []
     warning: str | None = None
@@ -129,7 +124,10 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
     # Per ora skippiamo e usiamo solo fallback catalog
     warning = "poe.ninja builds API non ancora implementato; uso catalogo fallback."
     all_builds = _fallback_builds(bq)
-      BuildCandidate(build=b, score=_tag_match_score(b, bq))
+    
+    # 4. Scoring e ranking
+    candidates = [
+        BuildCandidate(build=b, score=_tag_match_score(b, bq))
         for b in all_builds
     ]
     candidates.sort(key=lambda c: c.score, reverse=True)
