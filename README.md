@@ -175,3 +175,37 @@ faustus-dashboard/
   se mai servisse.
 - **PyWebView è *opzionale*** — il prodotto funziona benissimo come "local web app"
   aprendo `http://127.0.0.1:5173` nel browser. Il bundle desktop è solo cosmesi.
+
+---
+
+## Faustus intra-NPC flipper
+
+Oltre all'engine basato su poe.ninja (`backend/services/arbitrage.py`), che confronta
+un Faustus "teorico" (mid-price based) col bridge via chaos del mercato, esiste un
+engine separato pensato solo per il **flipping intra-Faustus**.
+
+- Modulo: `backend/services/faustus_intra.py`
+- Input: lista di `FaustusRate(source_trade_id, target_trade_id, rate)`, dove
+  `rate` è quante unità di `target_trade_id` dà Faustus per 1 unità di
+  `source_trade_id`.
+- Output: lista di `FaustusCycle(path, profit_pct, step_rates)` ordinati per
+  profit decrescente.
+
+Esempio minimale di utilizzo:
+
+```python
+from backend.services.faustus_intra import FaustusRate, find_faustus_cycles
+
+rates = [
+    FaustusRate("divine-orb", "fracturing-orb", 2.5),
+    FaustusRate("fracturing-orb", "divine-orb", 1 / 2.15),
+]
+
+cycles = find_faustus_cycles(rates, min_profit_pct=1.0)
+for c in cycles:
+    print(c.path, c.profit_pct)
+# path ~ ('divine-orb', 'fracturing-orb', 'divine-orb'), profit_pct ~ 16.3
+```
+
+Questo engine è completamente indipendente dai dati poe.ninja / DB: è pensato per
+essere alimentato da rate misurati in-game direttamente sull'NPC Faustus.
