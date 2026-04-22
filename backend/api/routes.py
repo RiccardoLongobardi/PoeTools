@@ -366,3 +366,39 @@ def arbitrage_endpoint(
         cycles=cycles_out,
         pairs=pairs_out,
     )
+
+
+# ---------------------------------------------------------------------------
+# FOB - Frusta Oracle Builder endpoints
+# ---------------------------------------------------------------------------
+from backend.services.fob_oracle import oracle as fob_oracle
+
+class FobRequest(BaseModel):
+    """Request model for FOB Oracle."""
+    request: str
+    pob_code: str | None = None
+    league: str = settings.league
+
+class FobRecommendation(BaseModel):
+    name: str
+    source: str
+    url: str
+    match_score: float
+    dps: float
+    ehp: float
+    estimated_cost: dict
+    progression: list
+
+class FobResponse(BaseModel):
+    intent: dict
+    current_build: dict | None
+    recommendations: list[FobRecommendation]
+
+@router.post("/fob/oracle", response_model=FobResponse, tags=["fob"])
+async def fob_oracle_endpoint(
+    body: FobRequest,
+) -> FobResponse:
+    """FOB Frusta Oracle Builder - interpreta la richiesta in linguaggio naturale
+    e restituisce build candidate con progressione 1->100 e costi reali."""
+    result = fob_oracle(user_request=body.request, pob_code=body.pob_code)
+    return FobResponse(**result)
