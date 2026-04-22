@@ -22,8 +22,8 @@ class PoELadderSource:
 
     def __init__(
         self,
-        league: str = "Settlers",
-        base_url: str = "https://poe.ninja",
+        league: str = "Mirage",
+        base_url: str = "https://poe.ninja/poe1",
         timeout_s: float = 10.0,
     ):
         self.league = league
@@ -40,7 +40,7 @@ class PoELadderSource:
         Returns:
             Lista di Build oggetti con dati reali dalla ladder
         """
-        url = f"{self.base_url}/challenge/builds"
+        url = f"{self.base_url}/builds"
         logger.info("Fetching builds from %s (league=%s)", url, self.league)
 
         try:
