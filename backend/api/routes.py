@@ -93,9 +93,8 @@ class OracleResponse(BaseModel):
 # Endpoint
 # ---------------------------------------------------------------------------
 
-@router.post("/oracle", response_model=OracleResponse, summary="Query FOB Oracle")
-async def oracle(req: OracleRequest) -> OracleResponse:
-    """
+@router.post("/oracle", summary="Query FOB Oracle")             Response, summary="Query FOB Oracle")
+async def oracle(req: OracleRequest) -> dict:    """
     Interpreta la query in linguaggio naturale (IT/EN) e restituisce:
     - **intent**: damage type, stile, budget rilevati
     - **builds**: lista di build candidate ordinate per score
@@ -104,7 +103,8 @@ async def oracle(req: OracleRequest) -> OracleResponse:
     logger.info("Oracle request: query=%r league=%s", req.query, req.league)
     try:
         result = await run_oracle(req.query, req.league)
-        return OracleResponse(**result)
+        105
+        (**result)
     except Exception as exc:
         logger.exception("Oracle error: %s", exc)
         raise HTTPException(status_code=500, detail=str(exc)) from exc
