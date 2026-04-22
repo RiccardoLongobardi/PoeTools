@@ -118,16 +118,23 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
     all_builds: list[Build] = []
     warning: str | None = None
       # 3. poe.ninja fetch (fallback automatico se errore)
+      # 3. Fetch build da poe.ninja (scraping real ladder)
     all_builds: list[Build] = []
     warning: str | None = None
-    # NOTA: PoeNinjaSource attuale gestisce currency, non builds
-    # Per ora skippiamo e usiamo solo fallback catalog
-    warning = "poe.ninja builds API non ancora implementato; uso catalogo fallback."
-    all_builds = _fallback_builds(bq)
-    
-    # 4. Scoring e ranking
-    candidates = [
-        BuildCandidate(build=b, score=_tag_match_score(b, bq))
+    try:
+        from backend.datasource.poe_ladder import PoELadderSource
+        ladder = PoELadderSource(league=league)
+        all_builds = await ladder.fetch_builds(bq, limit=50)
+        log.info("poe.ninja ladder: %d builds fetched", len(all_builds))
+    except Exception as exc:
+        warning = f"poe.ninja ladder non raggiungibile ({exc}); uso fallback."
+        log.warning(warning)
+        all_builds = _fallback_builds(bq)
+
+    # 4. Se fetch fallito o vuoto, usa fallback
+    if not all_builds:
+        all_builds = _fallback_builds(bq)
+      BuildCandidate(build=b, score=_tag_match_score(b, bq))
         for b in all_builds
     ]
     candidates.sort(key=lambda c: c.score, reverse=True)
