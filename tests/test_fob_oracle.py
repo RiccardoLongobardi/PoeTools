@@ -34,7 +34,8 @@ class TestIntentTagger:
         tagger = IntentTagger()
         tags = tagger.tag("martellone slam forte")
         
-        assert "2h_mace" in tags.weapon_pref or "2h" in tags.weapon_pref        assert "melee" in tags.playstyle or "slam" in tags.damage_type
+        assert "2h_mace" in tags.weapon_pref or "2h" in tags.weapon_pref
+                assert "melee" in tags.playstyle or "slam" in tags.damage_type
         print(f"✅ Slam query → weapon={tags.weapon_pref}, style={tags.playstyle}")
 
     def test_dot_chaos_query(self):
