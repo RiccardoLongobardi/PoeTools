@@ -134,7 +134,10 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
     # 4. Se fetch fallito o vuoto, usa fallback
     if not all_builds:
         all_builds = _fallback_builds(bq)
-      BuildCandidate(build=b, score=_tag_match_score(b, bq))
+        
+    # 5. Scoring e ranking
+    candidates = [
+        BuildCandidate(build=b, score=_tag_match_score(b, bq))
         for b in all_builds
     ]
     candidates.sort(key=lambda c: c.score, reverse=True)
