@@ -24,7 +24,7 @@ router = APIRouter(prefix="/fob", tags=["oracle"])
 
 class OracleRequest(BaseModel):
     query: str
-    league: str = "Settlers"
+    league: str = "Mirage"
 
 
 class IntentResult(BaseModel):
@@ -103,6 +103,9 @@ async def oracle(req: OracleRequest) -> dict:    """
     logger.info("Oracle request: query=%r league=%s", req.query, req.league)
     try:
         result = await run_oracle(req.query, req.league)
+                # Serialize plan object to dict if present
+        if result.get("plan") and hasattr(result["plan"], "model_dump"):
+            result["plan"] = result["plan"].model_dump()
         105
         (**result)
     except Exception as exc:
