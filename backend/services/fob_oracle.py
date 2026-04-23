@@ -1,106 +1,130 @@
 """FOB orchestrator: BuildQuery→Build candidates→BuildPlan."""
 from __future__ import annotations
-from dataclasses import dataclass,field
-from typing import Optional,Protocol
+from dataclasses import dataclass, field
+from typing import Optional, Protocol
 from backend.services.intent import IntentTagger
 from backend.services.pob_parser import parse_pob
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 @dataclass
 class BuildQuery:
-    description:str
-    league:str="Mirage"
-    budget_div:Optional[float]=None
-    element:list[str]=field(default_factory=list)
-    damage_type:list[str]=field(default_factory=list)
-    weapon_pref:list[str]=field(default_factory=list)
-    playstyle:list[str]=field(default_factory=list)
-    ascendancy:list[str]=field(default_factory=list)
-    content_target:list[str]=field(default_factory=list)
+    description: str
+    league: str = "Mirage"
+    budget_div: Optional[float] = None
+    element: list[str] = field(default_factory=list)
+    damage_type: list[str] = field(default_factory=list)
+    weapon_pref: list[str] = field(default_factory=list)
+    playstyle: list[str] = field(default_factory=list)
+    ascendancy: list[str] = field(default_factory=list)
+    content_target: list[str] = field(default_factory=list)
+
 
 @dataclass
 class Build:
-    id:str
-    name:str
-    source:str
-    url:Optional[str]=None
-    pob_output:Optional[str]=None
-    ascendancy:Optional[str]=None
-    main_skill:Optional[str]=None
-    element:list[str]=field(default_factory=list)
-    damage_type:list[str]=field(default_factory=list)
-    weapon_pref:list[str]=field(default_factory=list)
-    playstyle:list[str]=field(default_factory=list)
-    est_cost_div:Optional[float]=None
-    league:Optional[str]=None
+    id: str
+    name: str
+    source: str
+    url: Optional[str] = None
+    pob_output: Optional[str] = None
+    ascendancy: Optional[str] = None
+    main_skill: Optional[str] = None
+    element: list[str] = field(default_factory=list)
+    damage_type: list[str] = field(default_factory=list)
+    weapon_pref: list[str] = field(default_factory=list)
+    playstyle: list[str] = field(default_factory=list)
+    est_cost_div: Optional[float] = None
+    league: Optional[str] = None
+
 
 @dataclass
 class BuildCandidate:
-    build:Build
-    score:float
+    build: Build
+    score: float
+
 
 @dataclass
 class BuildPlan:
-    build_id:str
-    league:str
-    levelling_stages:list=field(default_factory=list)
-    gear_phases:list=field(default_factory=list)
-    total_cost_div:Optional[float]=None
-    notes:str=""
+    build_id: str
+    league: str
+    levelling_stages: list = field(default_factory=list)
+    gear_phases: list = field(default_factory=list)
+    total_cost_div: Optional[float] = None
+    notes: str = ""
+
 
 class BuildSource(Protocol):
-    async def fetch_builds(self,query:BuildQuery)->list[Build]:...
+    async def fetch_builds(self, query: BuildQuery) -> list[Build]: ...
+
 
 class UserPoBSource:
-    def __init__(self,pob_code:str):
-        self._pob_code=pob_code
-    async def fetch_builds(self,query:BuildQuery)->list[Build]:
-        try:
-            p=parse_pob(self._pob_code)
-            return[Build(id="user_pob",name="User PoB",source="user",pob_output=self._pob_code,
-                ascendancy=p.ascendancy,main_skill=p.main_skill,element=p.element,
-                damage_type=p.damage_type,weapon_pref=p.weapon_pref,playstyle=p.playstyle)]
-        except:return[]
+    def __init__(self, pob_code: str):
+        self._pob_code = pob_code
 
-def _tag_match_score(b:Build,q:BuildQuery)->float:
-    s=0.0
-    if q.element and any(e in b.element for e in q.element):s+=2
-    if q.damage_type and any(d in b.damage_type for d in q.damage_type):s+=2
-    if q.ascendancy and b.ascendancy in q.ascendancy:s+=3
-    if q.weapon_pref and any(w in b.weapon_pref for w in q.weapon_pref):s+=1
-    if q.playstyle and any(p in b.playstyle for p in q.playstyle):s+=1
-    if q.budget_div and b.est_cost_div and abs(b.est_cost_div-q.budget_div)<10:s+=1
+    async def fetch_builds(self, query: BuildQuery) -> list[Build]:
+        try:
+            p = parse_pob(self._pob_code)
+            return [Build(
+                id="user_pob", name="User PoB", source="user",
+                pob_output=self._pob_code, ascendancy=p.ascendancy,
+                main_skill=p.main_skill, element=p.element,
+                damage_type=p.damage_type, weapon_pref=p.weapon_pref,
+                playstyle=p.playstyle,
+            )]
+        except:
+            return []
+
+
+def _tag_match_score(b: Build, q: BuildQuery) -> float:
+    s = 0.0
+    if q.element and any(e in b.element for e in q.element): s += 2
+    if q.damage_type and any(d in b.damage_type for d in q.damage_type): s += 2
+    if q.ascendancy and b.ascendancy in q.ascendancy: s += 3
+    if q.weapon_pref and any(w in b.weapon_pref for w in q.weapon_pref): s += 1
+    if q.playstyle and any(p in b.playstyle for p in q.playstyle): s += 1
+    if q.budget_div and b.est_cost_div and abs(b.est_cost_div - q.budget_div) < 10: s += 1
     return s
 
-async def suggest_builds(query:BuildQuery,*,user_pob_code:Optional[str]=None,
-    include_poe_ninja:bool=False,maxroll_catalog_path:Optional[str]=None,max_results:int=5)->list[BuildCandidate]:
-    sources:list[BuildSource]=[]
-    if user_pob_code:sources.append(UserPoBSource(user_pob_code))
-    all_builds:list[Build]=[]
+
+async def suggest_builds(
+    query: BuildQuery, *,
+    user_pob_code: Optional[str] = None,
+    include_poe_ninja: bool = False,
+    maxroll_catalog_path: Optional[str] = None,
+    max_results: int = 5,
+) -> list[BuildCandidate]:
+    sources: list[BuildSource] = []
+    if user_pob_code:
+        sources.append(UserPoBSource(user_pob_code))
+    all_builds: list[Build] = []
     for src in sources:
-        try:all_builds.extend(await src.fetch_builds(query))
-        except:pass
-    candidates=[BuildCandidate(build=b,score=_tag_match_score(b,query))for b in all_builds]
-    candidates.sort(key=lambda c:c.score,reverse=True)
+        try:
+            all_builds.extend(await src.fetch_builds(query))
+        except:
+            pass
+    candidates = [BuildCandidate(build=b, score=_tag_match_score(b, query)) for b in all_builds]
+    candidates.sort(key=lambda c: c.score, reverse=True)
     return candidates[:max_results]
 
-async def plan_build(build:Build)->BuildPlan:
+
+async def plan_build(build: Build) -> BuildPlan:
     from backend.services.planner import create_build_plan
     return await create_build_plan(build)
 
-async def run_oracle(query: str, league: str = "Settlers") -> dict:
+
+async def run_oracle(query: str, league: str = "Mirage") -> dict:
     """Entry point chiamato da routes.py.
 
     Riceve la query in linguaggio naturale, orchestra intent tagging,
     build suggestion e progressione, e restituisce un dict compatibile
     con OracleResponse.
     """
-    import logging
-    log = logging.getLogger(__name__)
-
     # 1. Tagger intento
     tagger = IntentTagger()
     tags = tagger.tag(query)
-    log.info("Intent tags: %s", tags)
+    logger.info("Intent tags: %s", tags)
 
     # 2. Costruisci BuildQuery
     bq = BuildQuery(
@@ -114,27 +138,23 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
         budget_div=tags.budget_div,
     )
 
-    # 3. Prova a caricare build da poe.ninja (fallback: lista vuota)
-    all_builds: list[Build] = []
-    warning: str | None = None
-      # 3. poe.ninja fetch (fallback automatico se errore)
-      # 3. Fetch build da poe.ninja (scraping real ladder)
+    # 3. Fetch build da poe.ninja (fallback automatico se errore)
     all_builds: list[Build] = []
     warning: str | None = None
     try:
         from backend.datasource.poe_ladder import PoELadderSource
         ladder = PoELadderSource(league=league)
         all_builds = await ladder.fetch_builds(bq, limit=50)
-        log.info("poe.ninja ladder: %d builds fetched", len(all_builds))
+        logger.info("poe.ninja ladder: %d builds fetched", len(all_builds))
     except Exception as exc:
         warning = f"poe.ninja ladder non raggiungibile ({exc}); uso fallback."
-        log.warning(warning)
+        logger.warning(warning)
         all_builds = _fallback_builds(bq)
 
     # 4. Se fetch fallito o vuoto, usa fallback
     if not all_builds:
         all_builds = _fallback_builds(bq)
-        
+
     # 5. Scoring e ranking
     candidates = [
         BuildCandidate(build=b, score=_tag_match_score(b, bq))
@@ -143,29 +163,27 @@ async def run_oracle(query: str, league: str = "Settlers") -> dict:
     candidates.sort(key=lambda c: c.score, reverse=True)
     top = candidates[:5]
 
-# Step 6: Plan progression + pricing sul top build
-plan = None
-if candidates:
-    try:
-        top_build = candidates[0].build
-        
-        # Integra pricing nel build
-        from backend.services.pricing.trade_pricing import TradePricer, COMMON_UNIQUES
-        pricer = TradePricer(league=league)
-        
-        # Detect archetype and estimate cost
-        archetype = "cold_spell" if "cold" in top_build.element else "generic"
-        uniques = COMMON_UNIQUES.get(archetype, [])[:3]
-        
-        if uniques:
-            cost_data = await pricer.estimate_build_cost(uniques)
-            top_build.est_cost_div = cost_data.get("total_divine")
-        
-        # Generate progression plan with pricing
-        plan = await plan_build(top_build)
-        
-    except Exception as exc:
-        logger.warning(f"Plan generation failed: {exc}")
+    # 6. Plan progression + pricing sul top build
+    plan = None
+    if candidates:
+        try:
+            top_build = candidates[0].build
+
+            from backend.services.pricing.trade_pricing import TradePricer, COMMON_UNIQUES
+            pricer = TradePricer(league=league)
+
+            archetype = "cold_spell" if "cold" in top_build.element else "generic"
+            uniques = COMMON_UNIQUES.get(archetype, [])[:3]
+
+            if uniques:
+                cost_data = await pricer.estimate_build_cost(uniques)
+                top_build.est_cost_div = cost_data.get("total_divine")
+
+            plan = await plan_build(top_build)
+
+        except Exception as exc:
+            logger.warning("Plan generation failed: %s", exc)
+
     # 7. Serializza in dict compatibile con OracleResponse
     intent_dict = {
         "damage_type": tags.damage_type,
@@ -276,8 +294,6 @@ def _fallback_builds(bq: BuildQuery) -> list[Build]:
             est_cost_div=18.0,
         ),
     ]
-    # Filtra per score > 0, altrimenti ritorna tutto
     scored = [(b, _tag_match_score(b, bq)) for b in catalog]
     matched = [b for b, s in scored if s > 0]
     return matched if matched else catalog
-
