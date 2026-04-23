@@ -21,11 +21,25 @@ class GearPhase:
     cost_div: Optional[float] = None
 
 
+def _stage_to_dict(stage: LevellingStage, idx: int) -> dict:
+    """Converte LevellingStage in dict compatibile con ProgressionStage."""
+    phases = ["early", "mid", "late"]
+    return {
+        "phase": phases[idx] if idx < len(phases) else f"phase_{idx}",
+        "level_range": f"1-{stage.level}" if idx == 0 else f"{stage.level - 20}-{stage.level}",
+        "title": f"Level {stage.level} checkpoint",
+        "main_skill": stage.gems[0] if stage.gems else "Main skill",
+        "support_gems": stage.gems[1:] if len(stage.gems) > 1 else [],
+        "key_gear": stage.tree_nodes,
+        "passive_priority": [],
+        "notes": stage.notes,
+    }
+
+
 async def create_build_plan(build: Build) -> BuildPlan:
     """Generate full progression plan for a build."""
-    
-    # Levelling stages (generic progression 1-70)
-    stages = [
+
+    stages_raw = [
         LevellingStage(
             level=12,
             gems=["Main skill gem", "Support gems (2-3)"],
@@ -42,20 +56,20 @@ async def create_build_plan(build: Build) -> BuildPlan:
             notes="Act 10: Finish campaign, start mapping"
         ),
     ]
-    
-    # Gear phases with pricing
+
+    # Converti a dict compatibili con ProgressionStage
+    stages = [_stage_to_dict(s, i) for i, s in enumerate(stages_raw)]
+
+    # Gear phases con pricing
     archetype = _detect_archetype(build)
     required_uniques = COMMON_UNIQUES.get(archetype, [])
-    
-    pricer = TradePricer(league=build.league or "Settlers")
-    
-    # Budget phase
+
+    pricer = TradePricer(league=build.league or "Mirage")
+
     budget_cost = await pricer.estimate_build_cost(required_uniques[:2] if required_uniques else [])
-    
-    # Endgame phase  
     endgame_cost = await pricer.estimate_build_cost(required_uniques if required_uniques else [])
-    
-    phases = [
+
+    phases_raw = [
         GearPhase(
             name="Budget (maps T1-10)",
             items=["Life + res rares", "Tabula Rasa"] + required_uniques[:2],
@@ -72,12 +86,18 @@ async def create_build_plan(build: Build) -> BuildPlan:
             cost_div=endgame_cost.get("total_divine", 50.0)
         ),
     ]
-    
-    total = sum(p.cost_div for p in phases if p.cost_div)
-    
+
+    # Converti GearPhase a stringhe leggibili per list[str]
+    phases = [
+        f"{p.name} | items: {', '.join(p.items)} | ~{p.cost_div:.1f} div"
+        for p in phases_raw
+    ]
+
+    total = sum(p.cost_div for p in phases_raw if p.cost_div)
+
     return BuildPlan(
         build_id=build.id,
-        league=build.league or "Settlers",
+        league=build.league or "Mirage",
         levelling_stages=stages,
         gear_phases=phases,
         total_cost_div=total,
