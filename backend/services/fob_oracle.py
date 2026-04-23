@@ -89,7 +89,8 @@ def _tag_match_score(b: Build, q: BuildQuery) -> float:
 
 
 async def suggest_builds(
-    query: BuildQuery, *,
+    query: BuildQuery,
+    *,
     user_pob_code: Optional[str] = None,
     include_poe_ninja: bool = False,
     maxroll_catalog_path: Optional[str] = None,
@@ -168,19 +169,14 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
     if candidates:
         try:
             top_build = candidates[0].build
-
             from backend.services.pricing.trade_pricing import TradePricer, COMMON_UNIQUES
             pricer = TradePricer(league=league)
-
             archetype = "cold_spell" if "cold" in top_build.element else "generic"
             uniques = COMMON_UNIQUES.get(archetype, [])[:3]
-
             if uniques:
                 cost_data = await pricer.estimate_build_cost(uniques)
                 top_build.est_cost_div = cost_data.get("total_divine")
-
             plan = await plan_build(top_build)
-
         except Exception as exc:
             logger.warning("Plan generation failed: %s", exc)
 
@@ -213,13 +209,33 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
         for c in top
     ]
 
+    # Serializza plan in dict compatibile con OracleResponse
     plan_dict = None
     if plan:
+        levelling_stages = []
+        for stage in getattr(plan, "levelling_stages", []):
+            levelling_stages.append({
+                "phase": str(getattr(stage, "phase", getattr(stage, "name", "")) or ""),
+                "level_range": str(getattr(stage, "level_range", getattr(stage, "level", "")) or ""),
+                "title": str(getattr(stage, "title", getattr(stage, "name", "")) or ""),
+                "main_skill": str(getattr(stage, "main_skill", "") or ""),
+                "support_gems": list(getattr(stage, "support_gems", []) or []),
+                "key_gear": list(getattr(stage, "key_gear", []) or []),
+                "passive_priority": list(getattr(stage, "passive_priority", []) or []),
+                "notes": str(getattr(stage, "notes", "") or ""),
+            })
+
+        gear_phases = []
+        for phase in getattr(plan, "gear_phases", []):
+            name = str(getattr(phase, "name", phase) or "")
+            cost = getattr(phase, "cost_div", None)
+            gear_phases.append(f"{name} (~{cost} div)" if cost is not None else name)
+
         plan_dict = {
             "build_id": plan.build_id,
             "league": plan.league,
-            "levelling_stages": plan.levelling_stages,
-            "gear_phases": plan.gear_phases,
+            "levelling_stages": levelling_stages,
+            "gear_phases": gear_phases,
             "total_cost_div": plan.total_cost_div,
             "priced_items": [],
             "notes": plan.notes,
