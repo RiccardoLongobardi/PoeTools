@@ -88,6 +88,37 @@ def _tag_match_score(b: Build, q: BuildQuery) -> float:
     return s
 
 
+def _builds_from_cache(league: str) -> list[Build]:
+    """Carica builds dalla cache su disco, se disponibile e non vuota."""
+    try:
+        from backend.services.cache_store import load_cache
+        data = load_cache(league)
+        records = data.get("builds", [])
+        if not records:
+            return []
+        builds = []
+        for r in records:
+            builds.append(Build(
+                id=r.get("id", ""),
+                name=r.get("name", ""),
+                source=r.get("source", "cache"),
+                url=r.get("url"),
+                ascendancy=r.get("ascendancy"),
+                main_skill=r.get("main_skill"),
+                element=r.get("element", []),
+                damage_type=r.get("damage_type", []),
+                weapon_pref=r.get("weapon_pref", []),
+                playstyle=r.get("playstyle", []),
+                est_cost_div=r.get("est_cost_div"),
+                league=r.get("league", league),
+            ))
+        logger.info("Cache hit: %d builds loaded for league=%s", len(builds), league)
+        return builds
+    except Exception as exc:
+        logger.warning("Cache load failed: %s", exc)
+        return []
+
+
 async def suggest_builds(
     query: BuildQuery,
     *,
@@ -118,9 +149,10 @@ async def plan_build(build: Build) -> BuildPlan:
 async def run_oracle(query: str, league: str = "Mirage") -> dict:
     """Entry point chiamato da routes.py.
 
-    Riceve la query in linguaggio naturale, orchestra intent tagging,
-    build suggestion e progressione, e restituisce un dict compatibile
-    con OracleResponse.
+    Priorità sorgenti:
+    1. Cache su disco (builds_cache.<league>.json)
+    2. poe.ninja ladder live (fallback se cache vuota)
+    3. Fallback hardcoded (se tutto fallisce)
     """
     # 1. Tagger intento
     tagger = IntentTagger()
@@ -139,24 +171,28 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
         budget_div=tags.budget_div,
     )
 
-    # 3. Fetch build da poe.ninja (fallback automatico se errore)
+    # 3. Prova cache prima, poi ladder live, poi fallback
     all_builds: list[Build] = []
     warning: str | None = None
-    try:
-        from backend.datasource.poe_ladder import PoELadderSource
-        ladder = PoELadderSource(league=league)
-        all_builds = await ladder.fetch_builds(bq, limit=50)
-        logger.info("poe.ninja ladder: %d builds fetched", len(all_builds))
-    except Exception as exc:
-        warning = f"poe.ninja ladder non raggiungibile ({exc}); uso fallback."
-        logger.warning(warning)
-        all_builds = _fallback_builds(bq)
 
-    # 4. Se fetch fallito o vuoto, usa fallback
+    all_builds = _builds_from_cache(league)
+
     if not all_builds:
+        logger.info("Cache vuota per league=%s, provo ladder live...", league)
+        try:
+            from backend.datasource.poe_ladder import PoELadderSource
+            ladder = PoELadderSource(league=league)
+            all_builds = await ladder.fetch_builds(bq, limit=50)
+            logger.info("poe.ninja ladder: %d builds fetched", len(all_builds))
+        except Exception as exc:
+            warning = f"Cache vuota e poe.ninja non raggiungibile ({exc}). Uso fallback builds."
+            logger.warning(warning)
+
+    if not all_builds:
+        warning = (warning or "") + " Usando build di esempio hardcoded."
         all_builds = _fallback_builds(bq)
 
-    # 5. Scoring e ranking
+    # 4. Scoring e ranking
     candidates = [
         BuildCandidate(build=b, score=_tag_match_score(b, bq))
         for b in all_builds
@@ -164,7 +200,7 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
     candidates.sort(key=lambda c: c.score, reverse=True)
     top = candidates[:5]
 
-    # 6. Plan progression + pricing sul top build
+    # 5. Plan progressione sul top build
     plan = None
     if candidates:
         try:
@@ -180,7 +216,7 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
         except Exception as exc:
             logger.warning("Plan generation failed: %s", exc)
 
-    # 7. Serializza in dict compatibile con OracleResponse
+    # 6. Serializza intent
     intent_dict = {
         "damage_type": tags.damage_type,
         "style": tags.playstyle,
@@ -209,7 +245,7 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
         for c in top
     ]
 
-    # Serializza plan in dict compatibile con OracleResponse
+    # 7. Serializza plan
     plan_dict = None
     if plan:
         levelling_stages = []
@@ -250,7 +286,7 @@ async def run_oracle(query: str, league: str = "Mirage") -> dict:
 
 
 def _fallback_builds(bq: BuildQuery) -> list[Build]:
-    """Build di esempio hardcoded quando poe.ninja non e' raggiungibile."""
+    """Build di esempio hardcoded quando cache e ladder non sono disponibili."""
     catalog = [
         Build(
             id="ice_nova_occultist",
