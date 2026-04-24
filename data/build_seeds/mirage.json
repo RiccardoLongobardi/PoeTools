@@ -1,0 +1,152 @@
+[
+  {
+    "id": "mirage-rf-chieftain",
+    "name": "Righteous Fire Chieftain",
+    "source": "maxroll",
+    "category": "guide",
+    "ascendancy": "Chieftain",
+    "main_skill": "Righteous Fire",
+    "url": "https://maxroll.gg/poe/build-guides/righteous-fire-chieftain-guide",
+    "pob_url": null,
+    "tags": {
+      "element": ["fire"],
+      "damage_type": ["spell", "dot"],
+      "playstyle": ["stationary", "tanky"],
+      "weapon_pref": ["sceptre", "shield"]
+    },
+    "guide": {
+      "summary": "Tanky RF build, mapping focus, regen-based",
+      "pros": ["Tanky", "Good clear", "SSF viable"],
+      "cons": ["Lower single target", "Regen dependent"],
+      "levelling": ["Wintertide Brand → RF"],
+      "gear": ["Kaom's Heart", "Rise of the Phoenix"],
+      "notes": "Top-tier mapper, good league start"
+    },
+    "signals": {
+      "is_ladder_build": false,
+      "is_guide_build": true,
+      "confidence": 1.0,
+      "popularity_rank": null
+    }
+  },
+  {
+    "id": "mirage-ls-berserker",
+    "name": "Lightning Strike Berserker",
+    "source": "maxroll",
+    "category": "guide",
+    "ascendancy": "Berserker",
+    "main_skill": "Lightning Strike",
+    "url": "https://maxroll.gg/poe/build-guides/lightning-strike-berserker",
+    "pob_url": null,
+    "tags": {
+      "element": ["lightning"],
+      "damage_type": ["attack"],
+      "playstyle": ["zoom", "glass-cannon"],
+      "weapon_pref": ["claw", "dagger"]
+    },
+    "guide": {
+      "summary": "Zoom mapping with high DPS ceiling",
+      "pros": ["Very fast", "High DPS", "Scales well"],
+      "cons": ["Squishy", "Expensive to optimize"],
+      "levelling": ["Frost Blades → LS"],
+      "gear": ["Omniscience", "Claw + shield"],
+      "notes": "Meta pick for endgame content"
+    },
+    "signals": {
+      "is_ladder_build": false,
+      "is_guide_build": true,
+      "confidence": 1.0,
+      "popularity_rank": null
+    }
+  },
+  {
+    "id": "mirage-poison-pconc-assassin",
+    "name": "Poison Power Siphon Assassin",
+    "source": "maxroll",
+    "category": "guide",
+    "ascendancy": "Assassin",
+    "main_skill": "Power Siphon",
+    "url": "https://maxroll.gg/poe/build-guides/poison-power-siphon-assassin",
+    "pob_url": null,
+    "tags": {
+      "element": ["chaos"],
+      "damage_type": ["attack", "dot"],
+      "playstyle": ["zoom", "glass-cannon"],
+      "weapon_pref": ["wand"]
+    },
+    "guide": {
+      "summary": "Poison prolif mapper, smooth clear",
+      "pros": ["Excellent clear", "Budget friendly", "Scales with investment"],
+      "cons": ["Squishy", "Boss DPS ramp"],
+      "levelling": ["Caustic Arrow → Power Siphon"],
+      "gear": ["Dendrobate", "Cold Iron Point"],
+      "notes": "Top tier mapper, great league start"
+    },
+    "signals": {
+      "is_ladder_build": false,
+      "is_guide_build": true,
+      "confidence": 1.0,
+      "popularity_rank": null
+    }
+  },
+  {
+    "id": "mirage-ts-deadeye",
+    "name": "Tornado Shot Deadeye",
+    "source": "maxroll",
+    "category": "guide",
+    "ascendancy": "Deadeye",
+    "main_skill": "Tornado Shot",
+    "url": "https://maxroll.gg/poe/build-guides/tornado-shot-deadeye",
+    "pob_url": null,
+    "tags": {
+      "element": ["physical", "cold"],
+      "damage_type": ["attack"],
+      "playstyle": ["zoom", "glass-cannon"],
+      "weapon_pref": ["bow"]
+    },
+    "guide": {
+      "summary": "Classic bow zoom mapper",
+      "pros": ["Very fast clear", "High ceiling", "Satisfying"],
+      "cons": ["Expensive", "Squishy", "Proj speed matters"],
+      "levelling": ["Caustic Arrow → TS"],
+      "gear": ["Omniscience", "Mageblood"],
+      "notes": "Expensive but rewarding"
+    },
+    "signals": {
+      "is_ladder_build": false,
+      "is_guide_build": true,
+      "confidence": 1.0,
+      "popularity_rank": null
+    }
+  },
+  {
+    "id": "mirage-dd-necro",
+    "name": "Detonate Dead Necromancer",
+    "source": "maxroll",
+    "category": "guide",
+    "ascendancy": "Necromancer",
+    "main_skill": "Detonate Dead",
+    "url": "https://maxroll.gg/poe/build-guides/detonate-dead-necromancer",
+    "pob_url": null,
+    "tags": {
+      "element": ["fire"],
+      "damage_type": ["spell"],
+      "playstyle": ["stationary", "safe"],
+      "weapon_pref": ["wand", "shield"]
+    },
+    "guide": {
+      "summary": "Corpse explosion build, safe playstyle",
+      "pros": ["Very tanky", "Boss killer", "SSF viable"],
+      "cons": ["Slower mapping", "Corpse reliant"],
+      "levelling": ["Armageddon Brand → DD"],
+      "gear": ["Unearth", "Corpsewalker"],
+      "notes": "Excellent HC and boss killer"
+    },
+    "signals": {
+      "is_ladder_build": false,
+      "is_guide_build": true,
+      "confidence": 1.0,
+      "popularity_rank": null
+    }
+  }
+]
