@@ -1,481 +1,526 @@
 <!DOCTYPE html>
 <html lang="it" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FOB Oracle — Frusta Oracle Builder</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
-      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
-      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
-      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
-      --space-12: 3rem; --space-16: 4rem;
-      --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-full: 9999px;
-      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    [data-theme="dark"] {
-      --bg: #0f0f0f;
-      --surface: #161616;
-      --surface-2: #1c1c1c;
-      --surface-3: #222;
-      --border: rgba(255,255,255,0.08);
-      --text: #e8e8e6;
-      --text-muted: #888;
-      --text-faint: #555;
-      --primary: #c89b3c;
-      --primary-hover: #ddb04e;
-      --primary-dim: rgba(200,155,60,0.12);
-      --error: #e05252;
-      --success: #5c9e6e;
-      --warning: #d4904a;
-      --tag-bg: rgba(200,155,60,0.1);
-      --tag-border: rgba(200,155,60,0.25);
-    }
-    [data-theme="light"] {
-      --bg: #f5f3ef;
-      --surface: #faf9f6;
-      --surface-2: #fff;
-      --surface-3: #f0ede8;
-      --border: rgba(0,0,0,0.1);
-      --text: #1a1a18;
-      --text-muted: #666;
-      --text-faint: #aaa;
-      --primary: #9a6e1a;
-      --primary-hover: #7c5512;
-      --primary-dim: rgba(154,110,26,0.1);
-      --error: #b83232;
-      --success: #3a7a4e;
-      --warning: #a8640e;
-      --tag-bg: rgba(154,110,26,0.08);
-      --tag-border: rgba(154,110,26,0.2);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; font-size: var(--text-base); color: var(--text); background: var(--bg); min-height: 100dvh; }
-    a, button, input, select { transition: color var(--transition), background var(--transition), border-color var(--transition), box-shadow var(--transition); }
-    button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
-    input { font: inherit; color: inherit; }
-    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOB — Frusta Oracle Builder</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;
+  --transition: 180ms cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="dark"] {
+  --bg:#0e0d0c;--surface:#171614;--surface-2:#1c1b19;--surface-off:#222120;
+  --border:rgba(255,255,255,0.08);--divider:rgba(255,255,255,0.05);
+  --text:#cdccca;--text-muted:#797876;--text-faint:#4a4947;
+  --primary:#4f98a3;--primary-hover:#227f8b;--primary-glow:rgba(79,152,163,0.15);
+  --gold:#e8af34;--error:#dd6974;--success:#6daa45;
+  --shadow-md:0 4px 24px rgba(0,0,0,0.4);
+}
+[data-theme="light"] {
+  --bg:#f7f6f2;--surface:#f9f8f5;--surface-2:#fbfbf9;--surface-off:#f3f0ec;
+  --border:rgba(0,0,0,0.1);--divider:rgba(0,0,0,0.06);
+  --text:#28251d;--text-muted:#7a7974;--text-faint:#bab9b4;
+  --primary:#01696f;--primary-hover:#0c4e54;--primary-glow:rgba(1,105,111,0.1);
+  --gold:#d19900;--error:#a13544;--success:#437a22;
+  --shadow-md:0 4px 24px rgba(0,0,0,0.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:'Satoshi',sans-serif;font-size:var(--text-base);color:var(--text);background:var(--bg);min-height:100dvh;}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+input,textarea{font:inherit;color:inherit}
+img{display:block;max-width:100%}
 
-    /* Layout */
-    .app { display: grid; grid-template-rows: auto 1fr; min-height: 100dvh; }
-    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: var(--space-4) var(--space-8); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
-    .logo { display: flex; align-items: center; gap: var(--space-3); }
-    .logo svg { color: var(--primary); }
-    .logo-text { font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.02em; }
-    .logo-sub { font-size: var(--text-xs); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-    .header-actions { display: flex; align-items: center; gap: var(--space-3); }
-    .theme-btn { padding: var(--space-2); border-radius: var(--radius-md); color: var(--text-muted); }
-    .theme-btn:hover { color: var(--text); background: var(--surface-2); }
+/* LAYOUT */
+.app{max-width:900px;margin-inline:auto;padding:var(--space-8) var(--space-4);}
 
-    main { padding: var(--space-8); max-width: 1200px; margin: 0 auto; width: 100%; }
+/* HEADER */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--space-10);
+  padding-bottom:var(--space-6);
+  border-bottom:1px solid var(--divider);
+}
+.logo{display:flex;align-items:center;gap:var(--space-3)}
+.logo svg{color:var(--primary)}
+.logo-text{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.01em}
+.logo-text span{color:var(--primary)}
+.logo-sub{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px}
+.theme-btn{
+  width:36px;height:36px;border-radius:var(--radius-md);
+  background:var(--surface);border:1px solid var(--border);
+  display:grid;place-items:center;color:var(--text-muted);
+  transition:color var(--transition),background var(--transition);
+}
+.theme-btn:hover{color:var(--text);background:var(--surface-off)}
 
-    /* Query box */
-    .query-section { margin-bottom: var(--space-8); }
-    .query-label { font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2); }
-    .query-row { display: flex; gap: var(--space-3); }
-    .query-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); font-size: var(--text-base); color: var(--text); outline: none; }
-    .query-input::placeholder { color: var(--text-faint); }
-    .query-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-dim); }
-    .query-btn { background: var(--primary); color: #0f0f0f; font-weight: 600; padding: var(--space-4) var(--space-8); border-radius: var(--radius-lg); font-size: var(--text-sm); white-space: nowrap; }
-    .query-btn:hover { background: var(--primary-hover); }
-    .query-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .league-badge { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-full); padding: var(--space-1) var(--space-3); font-size: var(--text-xs); color: var(--primary); font-family: 'JetBrains Mono', monospace; align-self: center; white-space: nowrap; }
+/* QUERY BOX */
+.query-section{margin-bottom:var(--space-8)}
+.query-label{font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-3);font-weight:500}
+.query-row{display:flex;gap:var(--space-3)}
+.query-input{
+  flex:1;padding:var(--space-3) var(--space-4);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);font-size:var(--text-base);
+  outline:none;transition:border-color var(--transition),box-shadow var(--transition);
+}
+.query-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
+.query-input::placeholder{color:var(--text-faint)}
+.league-select{
+  padding:var(--space-3) var(--space-4);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);color:var(--text);cursor:pointer;
+  outline:none;transition:border-color var(--transition);
+}
+.league-select:focus{border-color:var(--primary)}
+.submit-btn{
+  padding:var(--space-3) var(--space-6);
+  background:var(--primary);color:#fff;
+  border-radius:var(--radius-lg);font-weight:600;
+  font-size:var(--text-sm);letter-spacing:0.01em;
+  transition:background var(--transition),transform var(--transition);
+  white-space:nowrap;
+}
+.submit-btn:hover{background:var(--primary-hover)}
+.submit-btn:active{transform:scale(0.98)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed}
 
-    /* Tabs */
-    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: var(--space-6); }
-    .tab { padding: var(--space-3) var(--space-6); font-size: var(--text-sm); font-weight: 500; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
-    .tab:hover { color: var(--text); }
-    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+/* INTENT PILLS */
+.intent-bar{
+  display:flex;flex-wrap:wrap;gap:var(--space-2);
+  margin-top:var(--space-4);
+  min-height:28px;
+}
+.pill{
+  font-size:var(--text-xs);padding:2px var(--space-3);
+  border-radius:var(--radius-full,999px);
+  background:var(--surface-off);border:1px solid var(--border);
+  color:var(--text-muted);font-weight:500;
+}
+.pill.primary{background:var(--primary-glow);border-color:var(--primary);color:var(--primary)}
+.pill.gold{background:rgba(232,175,52,0.1);border-color:var(--gold);color:var(--gold)}
 
-    /* Intent bar */
-    .intent-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); margin-bottom: var(--space-6); display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
-    .intent-label { font-size: var(--text-xs); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-right: var(--space-2); }
-    .tag { background: var(--tag-bg); border: 1px solid var(--tag-border); color: var(--primary); border-radius: var(--radius-full); padding: 2px var(--space-3); font-size: var(--text-xs); font-family: 'JetBrains Mono', monospace; }
-    .tag.neutral { background: var(--surface-2); border-color: var(--border); color: var(--text-muted); }
-    .intent-hidden { display: none; }
+/* STATUS / ERRORS */
+.status-bar{
+  padding:var(--space-3) var(--space-4);
+  border-radius:var(--radius-md);
+  font-size:var(--text-sm);margin-bottom:var(--space-6);
+  display:none;
+}
+.status-bar.warning{background:rgba(232,175,52,0.08);border:1px solid rgba(232,175,52,0.2);color:var(--gold)}
+.status-bar.error{background:rgba(221,105,116,0.08);border:1px solid rgba(221,105,116,0.2);color:var(--error)}
+.status-bar.visible{display:block}
 
-    /* Build grid */
-    .builds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: var(--space-4); }
-    .build-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-5); cursor: pointer; position: relative; }
-    .build-card:hover { border-color: rgba(200,155,60,0.35); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-    .build-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-3); }
-    .build-name { font-size: var(--text-base); font-weight: 600; line-height: 1.3; }
-    .build-score { font-family: 'JetBrains Mono', monospace; font-size: var(--text-xs); color: var(--primary); background: var(--primary-dim); padding: 2px var(--space-2); border-radius: var(--radius-sm); white-space: nowrap; }
-    .build-meta { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); }
-    .build-badge { font-size: var(--text-xs); padding: 2px var(--space-2); border-radius: var(--radius-sm); border: 1px solid var(--border); color: var(--text-muted); }
-    .build-tags { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-bottom: var(--space-3); }
-    .build-footer { display: flex; justify-content: space-between; align-items: center; }
-    .build-source { font-size: var(--text-xs); color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
-    .build-link { font-size: var(--text-xs); color: var(--primary); text-decoration: none; }
-    .build-link:hover { text-decoration: underline; }
-    .match-detail { font-size: var(--text-xs); color: var(--text-faint); font-family: 'JetBrains Mono', monospace; margin-top: var(--space-2); }
+/* LOADING */
+.loading{display:none;text-align:center;padding:var(--space-12);color:var(--text-muted)}
+.loading.visible{display:block}
+.spinner{
+  width:32px;height:32px;border:2px solid var(--border);
+  border-top-color:var(--primary);border-radius:50%;
+  animation:spin 0.8s linear infinite;margin:0 auto var(--space-4);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Detail panel */
-    .detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; display: none; align-items: flex-start; justify-content: flex-end; padding: var(--space-4); }
-    .detail-overlay.open { display: flex; }
-    .detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); width: min(600px, 100%); max-height: calc(100dvh - var(--space-8)); overflow-y: auto; padding: var(--space-8); }
-    .detail-close { position: absolute; top: var(--space-4); right: var(--space-4); color: var(--text-muted); padding: var(--space-2); border-radius: var(--radius-md); }
-    .detail-close:hover { color: var(--text); background: var(--surface-2); }
-    .detail-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-2); }
-    .detail-section { margin-top: var(--space-6); }
-    .detail-section h3 { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: var(--space-3); }
-    .detail-section p, .detail-section li { font-size: var(--text-sm); color: var(--text-muted); line-height: 1.7; }
-    .detail-section ul { padding-left: var(--space-5); }
-    .detail-section li { margin-bottom: var(--space-1); }
+/* RESULTS */
+.results{display:none}
+.results.visible{display:block}
+.section-title{
+  font-size:var(--text-sm);font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--text-muted);
+  margin-bottom:var(--space-4);padding-bottom:var(--space-2);
+  border-bottom:1px solid var(--divider);
+}
 
-    /* Admin panel */
-    .admin-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-6); }
-    .admin-title { font-size: var(--text-base); font-weight: 600; margin-bottom: var(--space-6); }
-    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6); }
-    @media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } }
-    .source-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4); }
-    .source-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
-    .source-name { font-family: 'JetBrains Mono', monospace; font-size: var(--text-sm); font-weight: 600; }
-    .status-dot { width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--text-faint); }
-    .status-dot.ok { background: var(--success); }
-    .status-dot.error { background: var(--error); }
-    .status-dot.running { background: var(--warning); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    .source-meta { font-size: var(--text-xs); color: var(--text-faint); margin-bottom: var(--space-3); }
-    .source-refresh-btn { font-size: var(--text-xs); color: var(--primary); border: 1px solid var(--tag-border); border-radius: var(--radius-sm); padding: 2px var(--space-3); }
-    .source-refresh-btn:hover { background: var(--primary-dim); }
-    .admin-row { display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-4); }
-    .admin-btn { background: var(--primary); color: #0f0f0f; font-weight: 600; padding: var(--space-3) var(--space-6); border-radius: var(--radius-lg); font-size: var(--text-sm); }
-    .admin-btn:hover { background: var(--primary-hover); }
-    .admin-btn.secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
-    .admin-btn.secondary:hover { border-color: var(--primary); color: var(--primary); }
-    .log-box { background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); font-family: 'JetBrains Mono', monospace; font-size: var(--text-xs); color: var(--text-muted); min-height: 100px; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
-    .admin-creds { display: flex; gap: var(--space-3); margin-bottom: var(--space-4); }
-    .admin-creds input { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); font-size: var(--text-sm); flex: 1; }
-    .admin-creds input:focus { outline: none; border-color: var(--primary); }
+/* BUILD CARDS */
+.builds-grid{display:grid;gap:var(--space-4);margin-bottom:var(--space-8)}
+.build-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:var(--space-5);
+  transition:border-color var(--transition),box-shadow var(--transition);
+  position:relative;
+}
+.build-card:hover{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),var(--shadow-md)}
+.build-card.top-pick{border-color:var(--primary)}
+.top-badge{
+  position:absolute;top:var(--space-4);right:var(--space-4);
+  font-size:var(--text-xs);padding:2px var(--space-2);
+  background:var(--primary-glow);border:1px solid var(--primary);
+  color:var(--primary);border-radius:var(--radius-sm);font-weight:700;
+}
+.build-header{display:flex;align-items:flex-start;gap:var(--space-4);margin-bottom:var(--space-4)}
+.build-asc{
+  width:44px;height:44px;border-radius:var(--radius-md);
+  background:var(--surface-off);border:1px solid var(--border);
+  display:grid;place-items:center;font-size:var(--text-base);
+  flex-shrink:0;
+}
+.build-title{font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-1)}
+.build-meta{font-size:var(--text-xs);color:var(--text-muted)}
+.build-tags{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-bottom:var(--space-4)}
+.build-footer{display:flex;align-items:center;justify-content:space-between}
+.build-cost{font-size:var(--text-sm);color:var(--gold);font-weight:600}
+.build-source{font-size:var(--text-xs);color:var(--text-faint)}
+.build-link{
+  font-size:var(--text-xs);color:var(--primary);
+  text-decoration:none;font-weight:500;
+  padding:var(--space-1) var(--space-3);
+  border:1px solid var(--primary);
+  border-radius:var(--radius-sm);
+  transition:background var(--transition);
+}
+.build-link:hover{background:var(--primary-glow)}
+.score-bar{height:3px;background:var(--surface-off);border-radius:3px;margin-bottom:var(--space-4)}
+.score-fill{height:100%;border-radius:3px;background:var(--primary);transition:width 0.5s ease}
 
-    /* Empty / warning states */
-    .empty { text-align: center; padding: var(--space-16) var(--space-8); color: var(--text-muted); }
-    .empty p { margin-top: var(--space-2); font-size: var(--text-sm); }
-    .warning-bar { background: rgba(212,144,74,0.12); border: 1px solid rgba(212,144,74,0.3); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); font-size: var(--text-sm); color: var(--warning); margin-bottom: var(--space-4); display: none; }
-    .warning-bar.visible { display: block; }
+/* PLAN */
+.plan-section{margin-bottom:var(--space-8)}
+.plan-grid{display:grid;gap:var(--space-3)}
+.plan-stage{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:var(--space-4);
+  display:grid;grid-template-columns:80px 1fr;gap:var(--space-4);
+}
+.stage-level{
+  font-size:var(--text-xs);font-weight:700;color:var(--primary);
+  text-transform:uppercase;letter-spacing:0.05em;
+}
+.stage-title{font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-2)}
+.stage-notes{font-size:var(--text-xs);color:var(--text-muted)}
+.stage-gems{font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-2)}
+.plan-cost{
+  margin-top:var(--space-4);padding:var(--space-3) var(--space-4);
+  background:rgba(232,175,52,0.06);border:1px solid rgba(232,175,52,0.15);
+  border-radius:var(--radius-md);font-size:var(--text-sm);
+  color:var(--gold);font-weight:600;
+}
 
-    /* Skeleton */
-    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-    .skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite; border-radius: var(--radius-sm); }
-    .skeleton-card { height: 160px; border-radius: var(--radius-xl); }
+/* EMPTY / CACHE WARNING */
+.cache-hint{
+  margin-top:var(--space-6);padding:var(--space-4);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);font-size:var(--text-sm);
+  color:var(--text-muted);text-align:center;
+}
+.cache-hint code{
+  display:inline-block;margin-top:var(--space-2);
+  background:var(--surface-off);padding:var(--space-1) var(--space-3);
+  border-radius:var(--radius-sm);font-family:monospace;
+  color:var(--primary);font-size:var(--text-xs);
+}
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      main { padding: var(--space-4); }
-      header { padding: var(--space-3) var(--space-4); }
-      .query-row { flex-direction: column; }
-      .detail-panel { width: 100%; }
-    }
-  </style>
+/* REFRESH PANEL */
+.admin-panel{
+  margin-top:var(--space-10);padding:var(--space-5);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+}
+.admin-title{font-size:var(--text-sm);font-weight:700;color:var(--text-muted);margin-bottom:var(--space-4)}
+.admin-row{display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center}
+.refresh-btn{
+  padding:var(--space-2) var(--space-5);
+  background:var(--surface-off);border:1px solid var(--border);
+  border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:600;
+  transition:background var(--transition),border-color var(--transition);
+}
+.refresh-btn:hover{background:var(--surface);border-color:var(--primary);color:var(--primary)}
+.refresh-status{
+  font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-3);
+}
+
+@media(max-width:600px){
+  .query-row{flex-direction:column}
+  .plan-stage{grid-template-columns:1fr}
+  .build-footer{flex-direction:column;align-items:flex-start;gap:var(--space-2)}
+}
+</style>
 </head>
 <body>
 <div class="app">
+
+  <!-- HEADER -->
   <header>
     <div class="logo">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="FOB Oracle logo">
-        <circle cx="14" cy="14" r="12" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M14 6 L17 12 L23 13 L18.5 17.5 L19.5 23.5 L14 21 L8.5 23.5 L9.5 17.5 L5 13 L11 12 Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="FOB Logo">
+        <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
+        <path d="M8 10h10M8 16h7M8 22h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M20 19l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="22" r="3" fill="currentColor" opacity="0.6"/>
       </svg>
       <div>
-        <div class="logo-text">FOB Oracle</div>
-        <div class="logo-sub">Frusta Oracle Builder</div>
+        <div class="logo-text"><span>FOB</span> Oracle</div>
+        <div class="logo-sub">Frusta Oracle Builder — PoE 1</div>
       </div>
     </div>
-    <div class="header-actions">
-      <span class="league-badge">Mirage</span>
-      <button class="theme-btn" data-theme-toggle aria-label="Switch theme">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-    </div>
+    <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
   </header>
 
-  <main>
-    <!-- Query -->
-    <section class="query-section">
-      <div class="query-label">Descrivi la build che vuoi — in italiano o inglese</div>
-      <div class="query-row">
-        <input
-          class="query-input"
-          id="queryInput"
-          type="text"
-          placeholder="es: voglio una build che slammi forte con una mazza, non troppo costosa…"
-          autocomplete="off"
-        />
-        <button class="query-btn" id="queryBtn" onclick="runQuery()">Cerca build</button>
-      </div>
-    </section>
-
-    <!-- Intent bar -->
-    <div class="intent-bar intent-hidden" id="intentBar">
-      <span class="intent-label">intent:</span>
-      <span id="intentTags"></span>
+  <!-- QUERY -->
+  <section class="query-section">
+    <div class="query-label">Descrivi la build che vuoi — in italiano o inglese</div>
+    <div class="query-row">
+      <input
+        class="query-input" id="queryInput" type="text"
+        placeholder="es: voglio slammare forte con un martellone, budget 30 div"
+        autocomplete="off"
+      />
+      <select class="league-select" id="leagueSelect">
+        <option value="Mirage">Mirage</option>
+        <option value="Standard">Standard</option>
+        <option value="Hardcore">Hardcore</option>
+      </select>
+      <button class="submit-btn" id="submitBtn" onclick="runOracle()">Cerca</button>
     </div>
+    <div class="intent-bar" id="intentBar"></div>
+  </section>
 
-    <!-- Warning -->
-    <div class="warning-bar" id="warningBar"></div>
+  <!-- STATUS -->
+  <div class="status-bar" id="statusBar"></div>
 
-    <!-- Tabs -->
-    <nav class="tabs" role="tablist">
-      <button class="tab active" role="tab" onclick="switchTab('meta')" id="tab-meta">Meta builds</button>
-      <button class="tab" role="tab" onclick="switchTab('guide')" id="tab-guide">Guide builds</button>
-      <button class="tab" role="tab" onclick="switchTab('admin')" id="tab-admin">Refresh / Status</button>
-    </nav>
-
-    <!-- Meta builds -->
-    <div class="tab-panel active" id="panel-meta">
-      <div id="metaBuilds" class="builds-grid"></div>
-    </div>
-
-    <!-- Guide builds -->
-    <div class="tab-panel" id="panel-guide">
-      <div id="guideBuilds" class="builds-grid"></div>
-    </div>
-
-    <!-- Admin -->
-    <div class="tab-panel" id="panel-admin">
-      <div class="admin-section">
-        <div class="admin-title">Refresh Cache</div>
-        <div class="admin-creds">
-          <input id="adminUser" type="text" placeholder="username" value="admin" />
-          <input id="adminPass" type="password" placeholder="password" value="fob" />
-        </div>
-        <div class="admin-grid" id="sourceCards"></div>
-        <div class="admin-row">
-          <button class="admin-btn" onclick="triggerRefresh(null)">Refresh all sources</button>
-          <button class="admin-btn secondary" onclick="loadCacheStatus()">Aggiorna status</button>
-        </div>
-        <div class="log-box" id="adminLog">// Output refresh apparirà qui…</div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- Build detail overlay -->
-<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
-  <div class="detail-panel" id="detailPanel">
-    <button class="detail-close" onclick="closeDetailPanel()" aria-label="Chiudi">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <div id="detailContent"></div>
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div>Oracle al lavoro...</div>
   </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <div class="section-title">Build consigliate</div>
+    <div class="builds-grid" id="buildsGrid"></div>
+
+    <div class="plan-section" id="planSection" style="display:none">
+      <div class="section-title">Piano di progressione</div>
+      <div class="plan-grid" id="planGrid"></div>
+      <div class="plan-cost" id="planCost"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="admin-panel">
+    <div class="admin-title">⚙ Cache Admin</div>
+    <div class="admin-row">
+      <input id="adminUser" type="text" placeholder="utente" value="admin"
+        style="padding:6px 10px;background:var(--surface-off);border:1px solid var(--border);border-radius:var(--radius-md);width:110px"/>
+      <input id="adminPass" type="password" placeholder="password" value="fob"
+        style="padding:6px 10px;background:var(--surface-off);border:1px solid var(--border);border-radius:var(--radius-md);width:110px"/>
+      <button class="refresh-btn" onclick="triggerRefresh()">🔄 Refresh Cache</button>
+      <button class="refresh-btn" onclick="checkCacheStatus()">📊 Stato Cache</button>
+    </div>
+    <div class="refresh-status" id="refreshStatus"></div>
+  </div>
+
 </div>
 
 <script>
-const API_BASE = window.location.origin;
-const LEAGUE = 'Mirage';
-let allBuilds = [];
-
 // Theme toggle
 (function(){
-  const t = document.querySelector('[data-theme-toggle]');
-  const r = document.documentElement;
-  let d = r.getAttribute('data-theme') || 'dark';
-  t && t.addEventListener('click', () => {
-    d = d === 'dark' ? 'light' : 'dark';
-    r.setAttribute('data-theme', d);
+  const html = document.documentElement;
+  const btn = document.querySelector('[data-theme-toggle]');
+  let theme = 'dark';
+  html.setAttribute('data-theme', theme);
+  btn.addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', theme);
+    btn.innerHTML = theme === 'dark'
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
   });
 })();
 
-// Tabs
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  document.getElementById('panel-' + name).classList.add('active');
-  if (name === 'admin') loadCacheStatus();
-}
+// Enter key
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runOracle();
+});
 
-// Query
-async function runQuery() {
-  const q = document.getElementById('queryInput').value.trim();
-  if (!q) return;
-  const btn = document.getElementById('queryBtn');
+const ASC_EMOJI = {
+  Occultist:'🔮', Juggernaut:'⚒', Raider:'💨', Pathfinder:'🌿',
+  Elementalist:'⚡', Champion:'🛡', Gladiator:'⚔', Berserker:'🔥',
+  Slayer:'💀', Necromancer:'💀', Inquisitor:'✨', Hierophant:'🎭',
+  Guardian:'🛡', Deadeye:'🏹', Trickster:'🎭', Saboteur:'💣',
+  Assassin:'🗡', Chieftain:'🔥', Warden:'🌲',
+};
+
+async function runOracle() {
+  const query = document.getElementById('queryInput').value.trim();
+  const league = document.getElementById('leagueSelect').value;
+  if (!query) return;
+
+  // Reset UI
+  const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Ricerca…';
-  showSkeletons('metaBuilds');
-  showSkeletons('guideBuilds');
-  document.getElementById('intentBar').classList.add('intent-hidden');
-  document.getElementById('warningBar').classList.remove('visible');
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('intentBar').innerHTML = '';
+  setStatus(null);
 
   try {
-    const res = await fetch(`${API_BASE}/fob/oracle`, {
+    const resp = await fetch('/fob/oracle', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q, league: LEAGUE }),
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({query, league}),
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    allBuilds = data.builds || [];
-    renderIntent(data.intent);
-    renderWarning(data.warning);
-    renderBuilds('metaBuilds', allBuilds.filter(b => b.source === 'ladder' || b.signals?.is_ladder_build));
-    renderBuilds('guideBuilds', allBuilds.filter(b => !b.signals?.is_ladder_build));
-  } catch (e) {
-    document.getElementById('metaBuilds').innerHTML = `<div class="empty"><p>Errore: ${e.message}</p></div>`;
-    document.getElementById('guideBuilds').innerHTML = '';
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({detail: resp.statusText}));
+      throw new Error(err.detail || resp.statusText);
+    }
+    const data = await resp.json();
+    renderResults(data);
+  } catch(e) {
+    setStatus('error', '❌ ' + e.message);
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Cerca build';
+    document.getElementById('loading').classList.remove('visible');
   }
 }
 
-document.getElementById('queryInput').addEventListener('keydown', e => { if (e.key === 'Enter') runQuery(); });
-
-function renderIntent(intent) {
-  if (!intent) return;
-  const bar = document.getElementById('intentBar');
-  const tags = document.getElementById('intentTags');
-  const items = [
-    ...(intent.damage_type || []).map(t => `<span class="tag">${t}</span>`),
-    ...(intent.playstyle || []).map(t => `<span class="tag">${t}</span>`),
-    ...(intent.element || []).map(t => `<span class="tag">${t}</span>`),
-    intent.budget !== 'any' ? `<span class="tag neutral">${intent.budget}</span>` : '',
-  ].filter(Boolean);
-  if (items.length) {
-    tags.innerHTML = items.join('');
-    bar.classList.remove('intent-hidden');
-  }
+function setStatus(type, msg) {
+  const bar = document.getElementById('statusBar');
+  if (!type) { bar.className = 'status-bar'; return; }
+  bar.className = `status-bar ${type} visible`;
+  bar.textContent = msg;
 }
 
-function renderWarning(w) {
-  const bar = document.getElementById('warningBar');
-  if (w) { bar.textContent = '⚠ ' + w; bar.classList.add('visible'); }
-  else bar.classList.remove('visible');
-}
+function renderResults(data) {
+  // Intent pills
+  const intentBar = document.getElementById('intentBar');
+  const intent = data.intent || {};
+  const pills = [];
+  (intent.damage_type || []).forEach(t => pills.push({label: t, type: 'primary'}));
+  (intent.style || []).forEach(t => pills.push({label: t, type: ''}) );
+  if (intent.budget && intent.budget !== 'any') pills.push({label: '💰 ' + intent.budget, type: 'gold'});
+  intentBar.innerHTML = pills.map(p =>
+    `<span class="pill ${p.type}">${p.label}</span>`
+  ).join('');
 
-function renderBuilds(containerId, builds) {
-  const el = document.getElementById(containerId);
+  // Warning
+  if (data.warning) setStatus('warning', '⚠ ' + data.warning);
+  else setStatus(null);
+
+  // Builds
+  const grid = document.getElementById('buildsGrid');
+  const builds = data.builds || [];
   if (!builds.length) {
-    el.innerHTML = '<div class="empty"><p>Nessuna build trovata per questa query.</p></div>';
-    return;
-  }
-  el.innerHTML = builds.map((b, i) => buildCard(b, i)).join('');
-}
-
-function buildCard(b, i) {
-  const matchStr = b.match_detail ? Object.entries(b.match_detail).map(([k,v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`).join(' · ') : '';
-  const tags = [...(b.element || []), ...(b.damage_type || []), ...(b.playstyle || [])].map(t => `<span class="tag">${t}</span>`).join('');
-  return `
-    <div class="build-card" onclick="openDetail(${i})" data-idx="${i}">
-      <div class="build-card-header">
-        <div class="build-name">${esc(b.name)}</div>
-        <span class="build-score">⬡ ${b.score ?? 0}</span>
-      </div>
-      <div class="build-meta">
-        ${b.ascendancy ? `<span class="build-badge">${esc(b.ascendancy)}</span>` : ''}
-        ${b.main_skill ? `<span class="build-badge">${esc(b.main_skill)}</span>` : ''}
-      </div>
-      <div class="build-tags">${tags}</div>
-      ${matchStr ? `<div class="match-detail">match: ${esc(matchStr)}</div>` : ''}
-      <div class="build-footer">
-        <span class="build-source">${esc(b.source)}</span>
-        ${b.url ? `<a class="build-link" href="${esc(b.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ apri</a>` : ''}
-      </div>
+    grid.innerHTML = `<div class="cache-hint">
+      Nessuna build trovata. Popola la cache prima:<br>
+      <code>POST /fob/admin/refresh</code>
     </div>`;
-}
-
-// Detail
-function openDetail(idx) {
-  const b = allBuilds[idx];
-  if (!b) return;
-  const g = b.guide || {};
-  document.getElementById('detailContent').innerHTML = `
-    <div class="detail-title">${esc(b.name)}</div>
-    <div class="build-meta" style="margin-bottom:var(--space-4)">
-      ${b.ascendancy ? `<span class="build-badge">${esc(b.ascendancy)}</span>` : ''}
-      ${b.main_skill ? `<span class="build-badge">${esc(b.main_skill)}</span>` : ''}
-      <span class="build-badge">${esc(b.source)}</span>
-      ${b.url ? `<a class="build-link" href="${esc(b.url)}" target="_blank" rel="noopener">↗ link originale</a>` : ''}
-    </div>
-    ${g.summary ? `<div class="detail-section"><h3>Descrizione</h3><p>${esc(g.summary)}</p></div>` : ''}
-    ${g.pros?.length ? `<div class="detail-section"><h3>Pro</h3><ul>${g.pros.map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>` : ''}
-    ${g.cons?.length ? `<div class="detail-section"><h3>Contro</h3><ul>${g.cons.map(c => `<li>${esc(c)}</li>`).join('')}</ul></div>` : ''}
-    ${g.levelling?.length ? `<div class="detail-section"><h3>Levelling</h3><ul>${g.levelling.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div>` : ''}
-    ${g.gear?.length ? `<div class="detail-section"><h3>Gear</h3><ul>${g.gear.map(gp => `<li>${esc(gp)}</li>`).join('')}</ul></div>` : ''}
-    ${g.notes ? `<div class="detail-section"><h3>Note</h3><p>${esc(g.notes)}</p></div>` : ''}
-    ${b.raw?.raw_text ? `<div class="detail-section"><h3>Raw text</h3><p style="font-family:monospace;font-size:0.75rem;white-space:pre-wrap;opacity:0.5">${esc(b.raw.raw_text.slice(0, 800))}${b.raw.raw_text.length > 800 ? '…' : ''}</p></div>` : ''}
-  `;
-  document.getElementById('detailOverlay').classList.add('open');
-}
-function closeDetail(e) { if (e.target === document.getElementById('detailOverlay')) closeDetailPanel(); }
-function closeDetailPanel() { document.getElementById('detailOverlay').classList.remove('open'); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetailPanel(); });
-
-// Skeleton
-function showSkeletons(id) {
-  document.getElementById(id).innerHTML = Array(4).fill('<div class="skeleton skeleton-card"></div>').join('');
-}
-
-// Admin
-function adminHeaders() {
-  const u = document.getElementById('adminUser').value;
-  const p = document.getElementById('adminPass').value;
-  return { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + btoa(u + ':' + p) };
-}
-
-async function loadCacheStatus() {
-  const log = document.getElementById('adminLog');
-  const cards = document.getElementById('sourceCards');
-  log.textContent = '// Caricamento status…';
-  try {
-    const res = await fetch(`${API_BASE}/fob/admin/cache/status?league=${LEAGUE}`, { headers: adminHeaders() });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    log.textContent = JSON.stringify(data, null, 2);
-    renderSourceCards(data.sources || {});
-  } catch (e) {
-    log.textContent = '// Errore: ' + e.message;
+  } else {
+    const maxScore = Math.max(...builds.map(b => b.score || 0), 1);
+    grid.innerHTML = builds.map((b, i) => {
+      const emoji = ASC_EMOJI[b.ascendancy] || '⚔';
+      const tags = [...(b.element||[]), ...(b.damage_type||[]), ...(b.playstyle||[])]
+        .filter((v,i,a) => a.indexOf(v) === i).slice(0,5);
+      const pct = Math.round(((b.score||0) / maxScore) * 100);
+      const cost = b.est_cost_div ? `~${b.est_cost_div} div` : '—';
+      const link = b.url ? `<a class="build-link" href="${b.url}" target="_blank" rel="noopener">Apri PoB</a>` : '';
+      return `
+        <div class="build-card ${i===0?'top-pick':''}">
+          ${i===0 ? '<span class="top-badge">TOP</span>' : ''}
+          <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
+          <div class="build-header">
+            <div class="build-asc">${emoji}</div>
+            <div>
+              <div class="build-title">${b.name}</div>
+              <div class="build-meta">${b.ascendancy||''} ${b.main_skill ? '· '+b.main_skill : ''}</div>
+            </div>
+          </div>
+          <div class="build-tags">${tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div>
+          <div class="build-footer">
+            <div>
+              <span class="build-cost">${cost}</span>
+              <span class="build-source" style="margin-left:var(--space-3)">fonte: ${b.source}</span>
+            </div>
+            ${link}
+          </div>
+        </div>`;
+    }).join('');
   }
+
+  // Plan
+  const planSection = document.getElementById('planSection');
+  const planGrid = document.getElementById('planGrid');
+  const planCost = document.getElementById('planCost');
+  const plan = data.plan;
+  if (plan && (plan.levelling_stages||[]).length) {
+    planSection.style.display = '';
+    planGrid.innerHTML = (plan.levelling_stages||[]).map(s => `
+      <div class="plan-stage">
+        <div>
+          <div class="stage-level">${s.level_range || s.phase || ''}</div>
+        </div>
+        <div>
+          <div class="stage-title">${s.title || s.main_skill || ''}</div>
+          ${s.notes ? `<div class="stage-notes">${s.notes}</div>` : ''}
+          ${(s.support_gems||[]).length ? `<div class="stage-gems">Gems: ${s.support_gems.join(', ')}</div>` : ''}
+        </div>
+      </div>`).join('');
+    planCost.textContent = plan.total_cost_div
+      ? `💰 Costo stimato build completa: ~${plan.total_cost_div} div`
+      : '';
+  } else {
+    planSection.style.display = 'none';
+  }
+
+  document.getElementById('results').classList.add('visible');
 }
 
-function renderSourceCards(sources) {
-  const cards = document.getElementById('sourceCards');
-  cards.innerHTML = Object.entries(sources).map(([name, s]) => `
-    <div class="source-card">
-      <div class="source-card-header">
-        <span class="source-name">${esc(name)}</span>
-        <span class="status-dot ${s.status === 'ok' ? 'ok' : s.status === 'error' ? 'error' : ''}"></span>
-      </div>
-      <div class="source-meta">${s.count ?? 0} builds · ${s.updated_at ? new Date(s.updated_at).toLocaleString('it-IT') : 'mai'}</div>
-      ${s.status === 'error' ? `<div style="font-size:var(--text-xs);color:var(--error);margin-bottom:var(--space-2)">${esc(s.error || '')}</div>` : ''}
-      <button class="source-refresh-btn" onclick="triggerRefresh('${name}')">↻ refresh</button>
-    </div>`).join('');
-}
-
-async function triggerRefresh(source) {
-  const log = document.getElementById('adminLog');
-  log.textContent = `// Avvio refresh${source ? ' source: ' + source : ' (all)'}…`;
+// Admin: refresh cache
+async function triggerRefresh() {
+  const user = document.getElementById('adminUser').value;
+  const pass = document.getElementById('adminPass').value;
+  const league = document.getElementById('leagueSelect').value;
+  const el = document.getElementById('refreshStatus');
+  el.textContent = 'Avvio refresh...';
   try {
-    const body = { league: LEAGUE, limit_per_source: 100 };
-    if (source) body.sources = [source];
-    const res = await fetch(`${API_BASE}/fob/admin/refresh`, {
+    const resp = await fetch('/fob/admin/refresh', {
       method: 'POST',
-      headers: adminHeaders(),
-      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa(user + ':' + pass),
+      },
+      body: JSON.stringify({league, limit_per_source: 100}),
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    log.textContent = JSON.stringify(data, null, 2);
-    setTimeout(loadCacheStatus, 3000);
-  } catch (e) {
-    log.textContent = '// Errore: ' + e.message;
+    const d = await resp.json();
+    el.textContent = resp.ok
+      ? `✅ ${d.status} — league: ${d.league}`
+      : `❌ ${d.detail || JSON.stringify(d)}`;
+  } catch(e) {
+    el.textContent = '❌ ' + e.message;
   }
 }
 
-function esc(s) {
-  if (s === null || s === undefined) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// Admin: cache status
+async function checkCacheStatus() {
+  const user = document.getElementById('adminUser').value;
+  const pass = document.getElementById('adminPass').value;
+  const league = document.getElementById('leagueSelect').value;
+  const el = document.getElementById('refreshStatus');
+  try {
+    const resp = await fetch(`/fob/admin/cache/status?league=${league}`, {
+      headers: {'Authorization': 'Basic ' + btoa(user + ':' + pass)},
+    });
+    const d = await resp.json();
+    if (!resp.ok) { el.textContent = '❌ ' + (d.detail || JSON.stringify(d)); return; }
+    el.textContent = `📊 League: ${d.league} | Builds: ${d.total_builds} | Ultimo refresh: ${d.last_refresh_at || 'mai'}`;
+    const sources = d.sources || {};
+    const src = Object.entries(sources).map(([k,v]) => `${k}:${v.status}(${v.count})`).join(' | ');
+    if (src) el.textContent += '\n' + src;
+  } catch(e) {
+    el.textContent = '❌ ' + e.message;
+  }
 }
 </script>
 </body>
